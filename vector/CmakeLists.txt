@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.12)
+
+project(vector)
+
+set(SOURCES
+    headers/vector.h
+    src/vector.hpp
+    src/main.cpp
+)
+
+add_executable(VectorTest ${SOURCES})
+
+set_property(TARGET VectorTest PROPERTY CXX_STANDARD 20)
