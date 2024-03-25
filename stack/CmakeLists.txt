@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.12)
+
+project(stack)
+
+set(SOURCES
+    headers/stack.h
+    headers/stack.hpp
+    src/main.cpp
+)
+
+add_executable(StackTest ${SOURCES})
+
+set_property(TARGET StackTest PROPERTY CXX_STANDARD 20)

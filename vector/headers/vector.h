@@ -40,6 +40,6 @@ private:
 	pointer m_arr;
 };
 
-#include "../src/vector.hpp"
+#include "vector.hpp"
 
 #endif // VECTOR_H

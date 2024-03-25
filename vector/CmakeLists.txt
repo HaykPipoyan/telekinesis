@@ -4,7 +4,7 @@ project(vector)
 
 set(SOURCES
     headers/vector.h
-    src/vector.hpp
+    headers/vector.hpp
     src/main.cpp
 )
 

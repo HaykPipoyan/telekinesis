@@ -1,4 +1,7 @@
-//#include "vector.h"
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
+
+#include "vector.h"
 
 template<typename T>
 vector<T>::vector() 
@@ -141,3 +144,4 @@ vector<T>::size() const {
 	return m_size;
 }
 
+#endif // VECTOR_HPP
