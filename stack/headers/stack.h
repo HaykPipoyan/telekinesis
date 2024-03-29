@@ -13,15 +13,12 @@ public:
 	using reference = Container::reference;
 	using const_reference = Container::const_reference;
 
-public:
 	stack();
-
 	stack(const stack& other);
 	stack(stack&& other);
 	stack(std::initializer_list<value_type> init);
 	~stack();
-	
-public:
+
 	void push(const_reference value);
 	void pop();
 	reference top();
@@ -29,36 +26,54 @@ public:
 	void swap(stack<T, Container>& other); 
 	bool empty() const;
 
+	friend bool operator==(const stack<T, Container>& lhs,
+		                   const stack<T, Container>& rhs );	
+
+	friend bool operator!=(const stack<T, Container>& lhs,
+		                   const stack<T, Container>& rhs );	
+
+	friend bool operator<(const stack<T, Container>& lhs,
+		                  const stack<T, Container>& rhs );	
+
+	friend bool operator<=(const stack<T, Container>& lhs,
+		                   const stack<T, Container>& rhs );	
+
+	friend bool operator>(const stack<T, Container>& lhs,
+		                  const stack<T, Container>& rhs );	
+
+	friend bool operator>=(const stack<T, Container>& lhs,
+		                   const stack<T, Container>& rhs );	
 
 private:
 	Container ob;
 };
-	
-template<typename T, typename Container = std::vector<T>>
-bool operator==( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs );	
 
 template<typename T, typename Container = std::vector<T>>
-bool operator!=( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs );
+bool operator==(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs );	
 
-/*	
-template<typename T, typename Container = std::vector<T>>
-bool operator< ( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs );
-	
-template<typename T, typename Container = std::vector<T>>
-bool operator<=( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs );
 
 template<typename T, typename Container = std::vector<T>>
-bool operator> ( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs );
+bool operator!=(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs );
+
+
+template<typename T, typename Container = std::vector<T>>
+bool operator<(const stack<T, Container>& lhs,
+               const stack<T, Container>& rhs );
 	
 template<typename T, typename Container = std::vector<T>>
-bool operator>=( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs );
-*/
+bool operator<=(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs );
+
+template<typename T, typename Container = std::vector<T>>
+bool operator>(const stack<T, Container>& lhs,
+               const stack<T, Container>& rhs );
+	
+template<typename T, typename Container = std::vector<T>>
+bool operator>=(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs );
+
 
 #include "stack.hpp"
 

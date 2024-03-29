@@ -8,7 +8,9 @@
 template<typename T, typename Container>
 stack<T, Container>::stack() 
 	: ob{} 
-{}
+{
+	std::cout << "ctor" << std::endl;
+}
 
 template<typename T, typename Container>
 stack<T, Container>::stack(const stack& other) 
@@ -25,7 +27,9 @@ stack<T, Container>::stack(stack&& other)
 template<typename T, typename Container>
 stack<T, Container>::stack(std::initializer_list<value_type> init)
 	: ob{init}
-{}
+{
+	std::cout << "init" << std::endl;
+}
 
 template<typename T, typename Container>
 stack<T, Container>::~stack() 
@@ -76,76 +80,42 @@ bool stack<T, Container>::empty() const
 }
 
 template<typename T, typename Container>
-bool operator==( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs )
+bool operator==(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs ) 
 {
-	if(lhs.size() != rhs.size()) {
-		return false;
-	}
-	stack<T, Container> lhsCopy = lhs;
-	stack<T, Container> rhsCopy = rhs;
+	std::cout << "operator==";
+	return lhs.ob == rhs.ob;
+}
 
-	while(!lhsCopy.empty()) {
-		if(lhsCopy.top() != rhsCopy.top()) {
-			return false;
-		}
-		lhsCopy.pop();
-		rhsCopy.pop();
-	}
-	return true;
-}	
 
 template<typename T, typename Container>
-bool operator!=( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs )
+bool operator!=(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs )
 {
-	return !(lhs == rhs);
-}
-
-/*
-template<typename T, typename Container>
-bool operator< ( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs )
-{
-	if(lhs.size() >= rhs.size()) {
-		return false;
-	}
-	stack<T, Container> lhsCopy = lhs;
-	stack<T, Container> rhsCopy = rhs;
-
-	while(!lhsCopy.empty()) {
-		if(lhsCopy.top() != rhsCopy.top()) {
-			return false;
-		}
-		lhsCopy.pop();
-		rhsCopy.pop();
-	}
-	return true;
-
-}
-*/
-/*	
-template<typename T, typename Container = std::vector<T>>
-bool operator<=( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs )
-{
-	
-}
-
-template<typename T, typename Container = std::vector<T>>
-bool operator> ( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs )
-{
-	
+	return lhs.ob != rhs.ob;
 }
 	
 template<typename T, typename Container = std::vector<T>>
-bool operator>=( const stack<T, Container>& lhs,
-                 const stack<T, Container>& rhs )
+bool operator<=(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs )
 {
-	
+	return lhs.ob <= rhs.ob;
 }
 
-*/
+template<typename T, typename Container = std::vector<T>>
+bool operator> (const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs )
+{
+	return lhs.ob > rhs.ob;
+}
+	
+template<typename T, typename Container = std::vector<T>>
+bool operator>=(const stack<T, Container>& lhs,
+                const stack<T, Container>& rhs )
+{
+	return lhs.ob >= rhs.ob;
+}
+
+
 
 #endif // STACK_HPP
