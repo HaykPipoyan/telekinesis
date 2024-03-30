@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.12)
+
+project(queue)
+
+set(SOURCES
+    headers/queue.h
+    headers/queue.hpp
+    src/main.cpp
+)
+
+add_executable(QueueTest ${SOURCES})
+
+set_property(TARGET QueueTest PROPERTY CXX_STANDARD 20)

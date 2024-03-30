@@ -13,56 +13,72 @@ public:
 	using reference = Container::reference;
 	using const_reference = Container::const_reference;
 
-public:
 	queue();
-//	queue(const queue& other);
-//	queue(queue&& other);
-//	queue(std::initializer_list<value_type> init);
-//	~queue();
-/*
-public:
-	void push(const value_type& value);
+	queue(const queue& other);
+	queue(queue&& other);
+	queue(std::initializer_list<value_type> init);
+	~queue();
+
+	void push(const Container::const_reference value);
 	void pop();
 	reference front();
 	size_type size() const;
 	void swap(queue<T, Container>& other);
 	bool empty() const;
-*/
+
+	template <typename U, class ContainerU>
+	friend bool operator==(const queue<U, ContainerU>& lhs,
+						   const queue<U, ContainerU>& rhs );
+
+	template <typename U, class ContainerU>
+	friend bool operator!=(const queue<U, ContainerU>& lhs,
+						   const queue<U, ContainerU>& rhs );
+
+	template <typename U, class ContainerU>
+	friend bool operator<(const queue<U, ContainerU>& lhs,
+						  const queue<U, ContainerU>& rhs );
+
+	template <typename U, class ContainerU>
+	friend bool operator<=(const queue<U, ContainerU>& lhs,
+						   const queue<U, ContainerU>& rhs );
+
+	template <typename U, class ContainerU>
+	friend bool operator>(const queue<U, ContainerU>& lhs,
+						  const queue<U, ContainerU>& rhs );
+
+	template <typename U, class ContainerU>
+	friend bool operator>=(const queue<U, ContainerU>& lhs,
+						   const queue<U, ContainerU>& rhs );
+
 private:
 	Container ob;
 };
 
-/*
-template< class T, class Container >
-bool operator==( const queue<T, Container>& lhs,
-                 const queue<T, Container>& rhs );
+template <typename U, class ContainerU>
+bool operator==(const queue<U, ContainerU>& lhs,
+                const queue<U, ContainerU>& rhs );
 	
-template< class T, class Container >
-bool operator!=( const queue<T, Container>& lhs,
-                 const queue<T, Container>& rhs );
+template <typename U, class ContainerU>
+bool operator!=(const queue<U, ContainerU>& lhs,
+                const queue<U, ContainerU>& rhs );
 	
-template< class T, class Container >
-bool operator< ( const queue<T, Container>& lhs,
-                 const queue<T, Container>& rhs );
+template <typename U, class ContainerU>
+bool operator<(const queue<U, ContainerU>& lhs,
+               const queue<U, ContainerU>& rhs );
 	
-template< class T, class Container >
-bool operator<=( const queue<T, Container>& lhs,
-                 const queue<T, Container>& rhs );
+template <typename U, class ContainerU>
+bool operator<=(const queue<U, ContainerU>& lhs,
+                const queue<U, ContainerU>& rhs );
 	
-template< class T, class Container >
-bool operator> ( const queue<T, Container>& lhs,
-                 const queue<T, Container>& rhs );
+template <typename U, class ContainerU>
+bool operator>(const queue<U, ContainerU>& lhs,
+               const queue<U, ContainerU>& rhs );
 	
-template< class T, class Container >
-bool operator>=( const queue<T, Container>& lhs,
-                 const queue<T, Container>& rhs );
+template <typename U, class ContainerU>
+bool operator>=(const queue<U, ContainerU>& lhs,
+                const queue<U, ContainerU>& rhs );
 	
-template< class T, std::three_way_comparable Container >
-std::compare_three_way_result_t<Container>
-    operator<=>( const queue<T, Container>& lhs,
-                 const queue<T, Container>& rhs );
 
-*/
 
 #include "queue.hpp"
 
