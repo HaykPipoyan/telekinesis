@@ -79,39 +79,46 @@ bool stack<T, Container>::empty() const
 	return ob.empty();
 }
 
-template<typename T, typename Container>
-bool operator==(const stack<T, Container>& lhs,
-                const stack<T, Container>& rhs ) 
+template<typename U, typename ContainerU>
+bool operator==(const stack<U, ContainerU>& lhs,
+                const stack<U, ContainerU>& rhs ) 
 {
 	std::cout << "operator==";
 	return lhs.ob == rhs.ob;
 }
 
 
-template<typename T, typename Container>
-bool operator!=(const stack<T, Container>& lhs,
-                const stack<T, Container>& rhs )
+template<typename U, typename ContainerU>
+bool operator!=(const stack<U, ContainerU>& lhs,
+                const stack<U, ContainerU>& rhs )
 {
 	return lhs.ob != rhs.ob;
 }
 	
-template<typename T, typename Container = std::vector<T>>
-bool operator<=(const stack<T, Container>& lhs,
-                const stack<T, Container>& rhs )
+template<typename U, typename ContainerU>
+bool operator<=(const stack<U, ContainerU>& lhs,
+                const stack<U, ContainerU>& rhs )
 {
 	return lhs.ob <= rhs.ob;
 }
 
-template<typename T, typename Container = std::vector<T>>
-bool operator> (const stack<T, Container>& lhs,
-                const stack<T, Container>& rhs )
+template<typename U, typename ContainerU>
+bool operator<(const stack<U, ContainerU>& lhs,
+               const stack<U, ContainerU>& rhs )
+{
+	return lhs.ob < rhs.ob;
+}
+
+template<typename U, typename ContainerU>
+bool operator>(const stack<U, ContainerU>& lhs,
+               const stack<U, ContainerU>& rhs )
 {
 	return lhs.ob > rhs.ob;
 }
 	
-template<typename T, typename Container = std::vector<T>>
-bool operator>=(const stack<T, Container>& lhs,
-                const stack<T, Container>& rhs )
+template<typename U, typename ContainerU>
+bool operator>=(const stack<U, ContainerU>& lhs,
+                const stack<U, ContainerU>& rhs )
 {
 	return lhs.ob >= rhs.ob;
 }
