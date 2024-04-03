@@ -1,7 +1,6 @@
-#include "../headers/cell.h"
+#include "../headers/spreadSheet.h"
 
 int main() {
-	cell obj;
-	std::cin >> obj;
-	std::cout << obj;
+	spreadSheet obj(5,3);
+	spreadSheet ob1 = obj;
 }
