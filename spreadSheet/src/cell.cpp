@@ -5,6 +5,14 @@ cell::cell(const std::string& value)
 	: m_value {value}
 {}
 
+cell::cell(const char* value)
+	: m_value {value}
+{}
+
+cell::cell(const char value)
+	: m_value {value}
+{}
+
 cell::cell(int value)
 	: m_value {std::to_string(value)}
 {}
@@ -70,15 +78,15 @@ cell::operator std::string() const
 	return m_value;
 }
 
-std::ostream& operator<<(std::ostream& os, const cell& c) {
-    os << c.operator std::string();
+std::ostream& operator<<(std::ostream& os, const cell& other) {
+	os << other.operator std::string();
     return os;
 }
 
-std::istream& operator>>(std::istream& is, cell& c) {
+std::istream& operator>>(std::istream& is, cell& other) {
     std::string value;
     is >> value;
-    c = value;
+    other = value;
     return is;
 }
 

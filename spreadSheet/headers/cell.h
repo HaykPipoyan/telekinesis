@@ -8,6 +8,8 @@ class cell {
 public:
 	cell() = default;
 	cell(const std::string& value);
+	cell(const char value);
+	cell(const char* value);
 	cell(int value);
 	cell(double value);
 	cell(const cell& other);
