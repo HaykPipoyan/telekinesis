@@ -44,9 +44,6 @@ void stack<T, Container>::push(const_reference value)
 template <typename T, typename Container>
 void stack<T, Container>::pop()
 {
-	if(empty()) {
-		throw std::out_of_range("Stack underflow on pop");
-	}
 	ob.pop_back();
 }
 
@@ -54,9 +51,6 @@ template <typename T, typename Container>
 stack<T, Container>::reference 
 	stack<T, Container>::top()
 {
-	if(empty()) {
-		throw std::out_of_range("Stack underflow on top");
-	}
 	return ob.back();
 }
 
