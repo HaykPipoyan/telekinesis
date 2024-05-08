@@ -104,6 +104,7 @@ template<typename T>
 void vector<T>::clear() {
 	m_size = 0;
 	m_capacity = 0;
+	delete [] m_arr;
 	m_arr = nullptr;
 
 	std::cout << "clear" << std::endl;
