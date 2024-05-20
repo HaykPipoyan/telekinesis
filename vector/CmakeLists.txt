@@ -10,4 +10,4 @@ set(SOURCES
 
 add_executable(VectorTest ${SOURCES})
 
-set_property(TARGET VectorTest PROPERTY CXX_STANDARD 20)
+set_property(TARGET VectorTest PROPERTY CXX_STANDARD 11)
