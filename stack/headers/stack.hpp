@@ -3,68 +3,73 @@
 
 #include "stack.h"
 #include <iostream>
-#include <vector>
+
+using namespace g3;
 
 template<typename T, typename Container>
 stack<T, Container>::stack() 
 	: ob{} 
-{
-	std::cout << "ctor" << std::endl;
-}
-
-template<typename T, typename Container>
-stack<T, Container>::stack(const stack& other) 
-	: ob{other.ob}
 {}
 
 template<typename T, typename Container>
-stack<T, Container>::stack(stack&& other)
-	: ob{std::move(other.ob)}
+stack<T, Container>::stack(const stack& rhv)
+	: ob{rhv.ob}
+{}
+
+template<typename T, typename Container>
+stack<T, Container>::stack(stack&& rhv)
+	: ob{std::move(rhv.ob)}
 {
-	other.ob.clear();
+	rhv.ob.clear();
 }
 
 template<typename T, typename Container>
 stack<T, Container>::stack(std::initializer_list<value_type> init)
 	: ob{init}
-{
-	std::cout << "init" << std::endl;
-}
+{}
+
+template<typename T, typename Container>
+template <typename InputIt>
+stack<T, Container>::stack(InputIt first, InputIt last)
+	:	ob(first, last)
+{}
 
 template<typename T, typename Container>
 stack<T, Container>::~stack() 
 {}
 
-template <typename T, typename Container>
-void stack<T, Container>::push(const_reference value) 
+template<typename T, typename Container>
+const stack<T, Container>& 
+stack<T, Container>::operator=(const stack& rhv)
 {
-	ob.push_back(value);
+	if(this != rhv.ob) {
+		ob = rhv.ob;
+	}
+	return *this;
+}
+
+template<typename T, typename Container>
+const stack<T, Container>& 
+stack<T, Container>::operator=(stack&& rhv)
+{
+	if(this != rhv.ob) {
+		ob = std::move(rhv.ob);
+	}
+	return *this;
 }
 
 template <typename T, typename Container>
-void stack<T, Container>::pop()
-{
-	ob.pop_back();
-}
-
-template <typename T, typename Container>
-stack<T, Container>::reference 
-	stack<T, Container>::top()
+typename stack<T, Container>::reference 
+stack<T, Container>::top()
 {
 	return ob.back();
 }
 
 template <typename T, typename Container>
-stack<T, Container>::size_type 
-	stack<T, Container>::size() const
+typename stack<T, Container>::const_reference 
+stack<T, Container>::top() const
 {
-	return ob.size();
-}
-
-template <typename T, typename Container>
-void stack<T, Container>::swap(stack<T, Container>& other)
-{
-	ob.swap(other.ob);
+	return ob.back();
 }
 
 template <typename T, typename Container>
@@ -73,50 +78,59 @@ bool stack<T, Container>::empty() const
 	return ob.empty();
 }
 
-template<typename U, typename ContainerU>
-bool operator==(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs ) 
+template <typename T, typename Container>
+typename stack<T, Container>::size_type 
+stack<T, Container>::size() const
 {
-	std::cout << "operator==";
-	return lhs.ob == rhs.ob;
+	return ob.size();
 }
 
-
-template<typename U, typename ContainerU>
-bool operator!=(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs )
+template <typename T, typename Container>
+void stack<T, Container>::push(const_reference val)
 {
-	return lhs.ob != rhs.ob;
+	ob.push_back(val);
 }
+
+template <typename T, typename Container>
+void stack<T, Container>::pop()
+{
+	ob.pop_back();
+}
+
+template <typename T, class Container>
+bool stack<T, Container>::operator==(const stack& other)
+{
+	return  this->ob == other.ob;
+} 
+
+template <typename T, class Container>
+bool stack<T, Container>::operator!=(const stack& other)
+{
+	return  this->ob != other.ob;
+} 
+
+template <typename T, class Container>
+bool stack<T, Container>::operator<(const stack& other)
+{
+	return  this->ob < other.ob;
+} 
 	
-template<typename U, typename ContainerU>
-bool operator<=(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs )
+template <typename T, class Container>
+bool stack<T, Container>::operator<=(const stack& other)
 {
-	return lhs.ob <= rhs.ob;
-}
+	return  this->ob <= other.ob;
+} 
 
-template<typename U, typename ContainerU>
-bool operator<(const stack<U, ContainerU>& lhs,
-               const stack<U, ContainerU>& rhs )
+template <typename T, class Container>
+bool stack<T, Container>::operator>(const stack& other)
 {
-	return lhs.ob < rhs.ob;
-}
+	return  this->ob > other.ob;
+} 
 
-template<typename U, typename ContainerU>
-bool operator>(const stack<U, ContainerU>& lhs,
-               const stack<U, ContainerU>& rhs )
+template <typename T, class Container>
+bool stack<T, Container>::operator>=(const stack& other)
 {
-	return lhs.ob > rhs.ob;
-}
-	
-template<typename U, typename ContainerU>
-bool operator>=(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs )
-{
-	return lhs.ob >= rhs.ob;
-}
-
-
+	return  this->ob >= other.ob;
+} 
 
 #endif // STACK_HPP

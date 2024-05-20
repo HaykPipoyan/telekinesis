@@ -1,86 +1,58 @@
-#ifndef STACK_H
-#define STACK_H
+#ifndef __STACK__H__
+#define __STACK__H__
 
-#include <vector>
-#include <initializer_list>
+#include <deque>
 
-template< typename T, typename Container = std::vector<T>>
-class stack {
+namespace g3
+{
+template <typename T, typename Container = std::deque<T>>
+class stack
+{
 public:
-	using container_type = Container;
-	using value_type = Container::value_type;
-	using size_type = Container::size_type;
-	using reference = Container::reference;
-	using const_reference = Container::const_reference;
+    using container_type = Container;
+    using value_type = T;
+    using size_type = std::size_t;
+    using reference = value_type&;
+    using const_reference = const value_type&;
 
-	stack();
-	stack(const stack& other);
-	stack(stack&& other);
-	stack(std::initializer_list<value_type> init);
-	~stack();
+public:
+    stack();
+    stack(const stack& rhv);
+    stack(stack&& rhv);
+    stack(std::initializer_list<value_type> init);
+    template <typename InputIt>
+    stack(InputIt first, InputIt last);
+    ~stack();
 
-	void push(const_reference value);
-	void pop();
-	reference top();
-	size_type size() const;
-	void swap(stack<T, Container>& other); 
-	bool empty() const;
+    const stack& operator=(const stack& rhv);
+    const stack& operator=(stack&& rhv);
 
-	template<typename U, typename ContainerU>
-	friend bool operator==(const stack<U, ContainerU>& lhs,
-		                   const stack<U, ContainerU>& rhs );	
+public:
+    reference top();
+    const_reference top() const;
 
-	template<typename U, typename ContainerU>
-	friend bool operator!=(const stack<U, ContainerU>& lhs,
-		                   const stack<U, ContainerU>& rhs );	
+    bool empty() const;
+    size_type size() const;
 
-	template<typename U, typename ContainerU>
-	friend bool operator<(const stack<U, ContainerU>& lhs,
-		                  const stack<U, ContainerU>& rhs );	
+    void push(const_reference val);
+    void pop();
 
-	template<typename U, typename ContainerU>
-	friend bool operator<=(const stack<U, ContainerU>& lhs,
-		                   const stack<U, ContainerU>& rhs );	
+public:
 
-	template<typename U, typename ContainerU>
-	friend bool operator>(const stack<U, ContainerU>& lhs,
-		                  const stack<U, ContainerU>& rhs );	
+    bool operator==(const stack& other);
+    bool operator!=(const stack& other);
+    bool operator<(const stack& other);
+    bool operator<=(const stack& other);
+    bool operator>(const stack& other);
+    bool operator>=(const stack& other);
 
-	template<typename U, typename ContainerU>
-	friend bool operator>=(const stack<U, ContainerU>& lhs,
-		                   const stack<U, ContainerU>& rhs );	
 
 private:
-	Container ob;
+    Container ob;
 };
 
-template<typename U, typename ContainerU = std::vector<U>>
-bool operator==(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs );	
 
-
-template<typename U, typename ContainerU = std::vector<U>>
-bool operator!=(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs );
-
-
-template<typename U, typename ContainerU = std::vector<U>>
-bool operator<(const stack<U, ContainerU>& lhs,
-               const stack<U, ContainerU>& rhs );
-	
-template<typename U, typename ContainerU = std::vector<U>>
-bool operator<=(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs );
-
-template<typename U, typename ContainerU = std::vector<U>>
-bool operator>(const stack<U, ContainerU>& lhs,
-               const stack<U, ContainerU>& rhs );
-	
-template<typename U, typename ContainerU = std::vector<U>>
-bool operator>=(const stack<U, ContainerU>& lhs,
-                const stack<U, ContainerU>& rhs );
-
-
+}
 #include "stack.hpp"
 
-#endif // STACK_H
+#endif
