@@ -12,7 +12,7 @@ int main()
 	ob2.pop();
 	ob2.front();
 	std::cout << ob2.size() << std::endl;
-	obj.swap(ob2);
+
 	std::cout << obj.empty();
 	std::cout << "ok" << std::endl;
 	if(ob2 == obj) {
