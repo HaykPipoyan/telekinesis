@@ -1,8 +1,38 @@
-#include "../headers/spreadSheet.h"
+#include <iostream>
+#include "../headers/cell.h"
+#include "../headers/spreadsheet.h"
 
 int main() {
-	spreadSheet obj{1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3," ", " ", 9 , 1, 2, 3, 4};
-	spreadSheet ob1;
-	ob1.copy_from(2, 2, obj);
-	ob1.print();
+    
+    SpreadSheet sheet(3, 3);
+
+    sheet[0][0] = 1;
+    sheet[0][1] = 2.5;
+    sheet[0][2] = 'A';
+    sheet[1][0] = true;
+    sheet[1][1] = "Hello";
+    sheet[1][2] = std::vector<int>{1, 2, 3};
+    sheet[2][0] = 10.75;
+    sheet[2][1] = 'B';
+    sheet[2][2] = false;
+
+    std::cout << "SpreadSheet:" << std::endl;
+    std::cout << sheet << std::endl;
+
+    SpreadSheet copy(sheet);
+
+    std::cout << "Copy of SpreadSheet:" << std::endl;
+    std::cout << copy << std::endl;
+
+    if (sheet == copy) {
+        std::cout << "Sheets are equal." << std::endl;
+    } else {
+        std::cout << "Sheets are not equal." << std::endl;
+    }
+
+    sheet.resize(2, 2);
+    std::cout << "Resized SpreadSheet:" << std::endl;
+    std::cout << sheet << std::endl;
+
+    return 0;
 }

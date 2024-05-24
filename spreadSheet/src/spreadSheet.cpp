@@ -1,201 +1,385 @@
 #include "../headers/spreadSheet.h"
 #include <iostream>
 
-spreadSheet::spreadSheet()
-	: m_row {2}
-	, m_col {2}
+SpreadSheet::SpreadSheet()
+	: m_row {0}
+	, m_col {0}
+	, board {nullptr}
+{}
+
+SpreadSheet::SpreadSheet(const SpreadSheet& rhv)
+	: m_row {rhv.m_row}
+	, m_col {rhv.m_col}
 {
 	Allocator();
+	for(size_t i = 0; i < m_row; ++i) {
+		for(size_t j = 0; j < m_col; ++j) {
+			board[i][j] = rhv.board[i][j];
+		}
+	}
 }
 
-spreadSheet::spreadSheet(int n)
-	: m_row {n}
-	, m_col {n}
+SpreadSheet::SpreadSheet(SpreadSheet&& rhv)
+	: m_row {rhv.m_row}
+	, m_col {rhv.m_col}
+	, board {rhv.board}
 {
-		Allocator();
+	rhv.m_row = 0;
+	rhv.m_col = 0;
+	rhv.board = nullptr;
+}
+
+SpreadSheet::SpreadSheet(size_t size)
+	: m_row {size}
+	, m_col {size}
+{
+	Allocator();
 }	
 
-spreadSheet::spreadSheet(int n, int m)
-	: m_row {n}
-	, m_col {m}
+SpreadSheet::SpreadSheet(size_t row, size_t col)
+	: m_row {row}
+	, m_col {col}
 {
 	Allocator();
 }
 
-spreadSheet::spreadSheet(std::initializer_list<cell> init)
+SpreadSheet::~SpreadSheet()
 {
-	m_col = 5;
-	m_row = (init.size() + m_col -1) / m_col;
-	Allocator();
-	int i = 0; 
-	int j = 0;
-	for(auto& it : init) {
-		m_cell[i][j] = it;
-		++j;
-		if(m_col == j){
-			++i;
-			j = 0; 
-		}
-	}	
+	clear();
 }
 
-spreadSheet::spreadSheet(const spreadSheet& other)
-	: m_row {other.m_row}
-	, m_col {other.m_col}
+const SpreadSheet& SpreadSheet::operator=(const SpreadSheet& rhv)
 {
-	Allocator();
-	for(int i = 0; i < m_row; ++i) {
-		for(int j = 0; j < m_col; ++j) {
-			m_cell[i][j] = other.m_cell[i][j];
-		}
-	}
-}
-spreadSheet::spreadSheet(spreadSheet&& other)
-	: m_row {other.m_row}
-	, m_col {other.m_col}
-	, m_cell {other.m_cell}
-{
-	other.m_row = 0;
-	other.m_col = 0;
-	other.m_cell = nullptr;
-}
-
-spreadSheet::~spreadSheet()
-{
-	for(int i = 0; i < m_row; ++i) {
-		delete[] m_cell[i];
-	}
-	delete[] m_cell;
-}
-
-spreadSheet& spreadSheet::operator=(const spreadSheet& other)
-{
-	if(this != &other) {
-			m_row = other.m_row;
-			m_col = other.m_col;
-			for(int i = 0; i < m_row; ++i) {
-				for(int j = 0; j < m_col; ++j) {
-					m_cell[i][j] = other.m_cell[i][j];
-				}
+	if(this != &rhv) {
+		clear();
+		m_row = rhv.m_row;
+		m_col = rhv.m_col;
+		Allocator();
+		for(int i = 0; i < m_row; ++i) {
+			for(int j = 0; j < m_col; ++j) {
+				board[i][j] = rhv.board[i][j];
 			}
+		}
 	}
 	return *this;
 }
 
-spreadSheet& spreadSheet::operator=(spreadSheet&& other)
+const SpreadSheet& SpreadSheet::operator=(SpreadSheet&& rhv)
 {
-	if(this != &other) {
-		m_row = other.m_row;
-		m_col = other.m_col;
-		m_cell = other.m_cell;
-		other.m_row = 0;
-		other.m_col = 0;
-		other.m_cell = nullptr;
+	if(this != &rhv) {
+		clear();
+		m_row = rhv.m_row;
+		m_col = rhv.m_col;
+		board = rhv.board;
+		rhv.m_row = 0;
+		rhv.m_col = 0;
+		rhv.board = nullptr;
 	}
 	return *this;
 }
 
-void spreadSheet::add_row(int val)
+void SpreadSheet::clear() noexcept
+ {
+	if (board) {
+        for (size_t i = 0; i < m_row; ++i) {
+            delete[] board[i];
+        }
+        delete[] board;
+        board = nullptr;
+    }
+ }
+
+ void SpreadSheet::Allocator()
 {
-	resize(m_row + val, m_col);
+	board = new Cell*[m_row];
+	for(size_t i = 0; i < m_row; ++i) {
+		board[i] = new Cell[m_col];
+	}
 }
 
-void spreadSheet::add_col(int val)
+SpreadSheet::Column SpreadSheet::operator[](size_t pos)
 {
-	resize(m_row, m_col + val);
+	if (pos >= m_row) {
+        throw std::out_of_range("Row index out of range");
+    }
+    return Column(board[pos]);
+}
+    
+const SpreadSheet::Column SpreadSheet::operator[](size_t pos) const
+{
+	if (pos >= m_row) {
+        throw std::out_of_range("Row index out of range");
+    }
+    return Column(board[pos]);
 }
 
-void spreadSheet::resize_row(int val)
+size_t SpreadSheet::row() const
 {
-	resize(val, m_col);
+	return m_row;
+}
+size_t SpreadSheet::col() const
+{
+	return m_col;
 }
 
-void spreadSheet::resize_col(int val)
+void SpreadSheet::mirrorH()
 {
-	resize(m_row, val);
+	for (size_t i = 0; i < m_row; ++i) {
+        for (size_t j = 0; j < m_col / 2; ++j) {
+            std::swap(board[i][j], board[i][m_col - j - 1]);
+        }
+    }
 }
 
-void spreadSheet::resize(int n, int m)
+void SpreadSheet::mirrorV()
 {
-	int tmp_row = (n <= m_row) ? n : m_row;
-	int tmp_col = (m <= m_col) ? m : m_col;
-	cell** ptr = new cell*[n];
-	for(int i = 0; i < n; ++i) {
-		ptr[i] = new cell[m];
+	for (size_t i = 0; i < m_row / 2; ++i) {
+        std::swap(board[i], board[m_row - i - 1]);
+    }
+}
+
+void SpreadSheet::mirrorD()
+{
+	if (m_row != m_col) {
+        throw std::logic_error("MirrorD requires a square matrix");
+    }
+    for (size_t i = 0; i < m_row; ++i) {
+        for (size_t j = i + 1; j < m_col; ++j) {
+            std::swap(board[i][j], board[j][i]);
+        }
+    }
+}
+
+void SpreadSheet::mirrorSD()
+{
+	if (m_row != m_col) {
+        throw std::logic_error("MirrorSD requires a square matrix");
+    }
+    for (size_t i = 0; i < m_row; ++i) {
+        for (size_t j = 0; j < m_col - i - 1; ++j) {
+            std::swap(board[i][j], board[m_col - j - 1][m_row - i - 1]);
+        }
+    }
+}
+
+void SpreadSheet::rotate(int cnt)
+{
+	cnt = (cnt % 4 + 4) % 4; 
+    for (int k = 0; k < cnt; ++k) {
+        size_t new_rows = m_col; 
+        size_t new_cols = m_row; 
+        Cell** new_board = new Cell*[new_rows];
+        for (size_t i = 0; i < new_rows; ++i) {
+            new_board[i] = new Cell[new_cols];
+        }
+        for (size_t i = 0; i < m_row; ++i) {
+            for (size_t j = 0; j < m_col; ++j) {
+                new_board[j][m_row - 1 - i] = board[i][j];
+            }
+        }
+        clear();
+        m_row = new_rows;
+        m_col = new_cols;
+        board = new_board;
+    }
+}
+
+void SpreadSheet::removeRow(size_t row)
+{
+	if (row >= m_row) {
+        throw std::out_of_range("Row index out of range");
+    }
+
+    Cell** new_board = new Cell*[m_row - 1];
+    for (size_t i = 0, k = 0; i < m_row; ++i) {
+        if (i != row) {
+            new_board[k++] = board[i];
+        }
+    }
+
+    delete[] board[row];
+    delete[] board;
+
+    --m_row;
+    board = new_board;
+}
+
+void SpreadSheet::removeRows(std::initializer_list<size_t> rows)
+{
+	for (auto row : rows) {
+        removeRow(row);
+    }
+}
+
+void SpreadSheet::removeCol(size_t col)
+{
+	if (col >= m_col) {
+        throw std::out_of_range("Column index out of range");
+    }
+
+    for (size_t i = 0; i < m_row; ++i) {
+        for (size_t j = col; j < m_col - 1; ++j) {
+            board[i][j] = board[i][j + 1];
+        }
+    }
+
+    for (size_t i = 0; i < m_row; ++i) {
+        Cell* temp = board[i];
+        board[i] = new Cell[m_col - 1];
+        for (size_t j = 0; j < m_col - 1; ++j) {
+            board[i][j] = temp[j];
+        }
+        delete[] temp;
+    }
+
+    --m_col;
+}
+
+void SpreadSheet::removeCols(std::initializer_list<size_t> cols)
+{
+	for (auto col : cols) {
+        removeCol(col);
+    }
+}
+
+void SpreadSheet::resizeRow(size_t r)
+{
+	if (r == m_row) {
+        return;
+    }
+    if (r < m_row) {
+        for (size_t i = r; i < m_row; ++i) {
+            delete[] board[i];
+        }
+        m_row = r;
+        Cell** new_board = new Cell*[m_row];
+        for (size_t i = 0; i < m_row; ++i) {
+            new_board[i] = board[i];
+        }
+        delete[] board;
+        board = new_board;
+    } else {
+        Cell** new_board = new Cell*[r];
+        for (size_t i = 0; i < m_row; ++i) {
+            new_board[i] = board[i];
+        }
+        for (size_t i = m_row; i < r; ++i) {
+            new_board[i] = new Cell[m_col];
+        }
+        delete[] board;
+        board = new_board;
+        m_row = r;
+    }
+}
+
+void SpreadSheet::resizeCol(size_t c)
+{
+	if (c == m_col) {
+        return; 
+    }
+    if (c < m_col) {
+        for (size_t i = 0; i < m_row; ++i) {
+            Cell* new_row = new Cell[c];
+            for (size_t j = 0; j < c; ++j) {
+                new_row[j] = board[i][j];
+            }
+            delete[] board[i];
+            board[i] = new_row;
+        }
+        m_col = c;
+    } else {
+        for (size_t i = 0; i < m_row; ++i) {
+            Cell* new_row = new Cell[c];
+            for (size_t j = 0; j < m_col; ++j) {
+                new_row[j] = board[i][j];
+            }
+            for (size_t j = m_col; j < c; ++j) {
+                new_row[j] = Cell(); 
+            }
+            delete[] board[i];
+            board[i] = new_row;
+        }
+        m_col = c;
+    }
+}
+
+void SpreadSheet::resize(size_t r, size_t c)
+{
+	size_t tmp_row = (r <= m_row) ? r : m_row;
+	size_t tmp_col = (c <= m_col) ? c : m_col;
+	Cell** ptr = new Cell*[r];
+	for(size_t i = 0; i < r; ++i) {
+		ptr[i] = new Cell[c];
 	}
 	
-	for(int i = 0; i < tmp_row; ++i) {
-		for(int j = 0; j < tmp_col; ++j) {
-			ptr[i][j] = m_cell[i][j];
+	for(size_t i = 0; i < tmp_row; ++i) {
+		for(size_t j = 0; j < tmp_col; ++j) {
+			ptr[i][j] = board[i][j];
 		}
 	}
-	for(int i = 0; i < m_row; ++i) {
-		delete[] m_cell[i];
+	for(size_t i = 0; i < m_row; ++i) {
+		delete[] board[i];
 	}
-	delete[] m_cell;
-	m_cell = ptr;
+	delete[] board;
+	board = ptr;
 	ptr = nullptr;
-	m_row = n;
-	m_col = m;
+	m_row = r;
+	m_col = c;
 }
 
-void spreadSheet::delete_row(int val)
+SpreadSheet SpreadSheet::slice(std::initializer_list<size_t> rows, std::initializer_list<size_t> cols)
 {
-	if(val < m_row) {
-		resize(m_row - val, m_col);
-		return;
-	}
-	throw std::out_of_range("value > row");
+	SpreadSheet sliced(rows.size(), cols.size());
+    size_t i = 0;
+    for (auto row : rows) {
+        size_t j = 0;
+        for (auto col : cols) {
+            sliced.board[i][j] = board[row][col];
+            ++j;
+        }
+        ++i;
+    }
+    return sliced;
+}       
+
+SpreadSheet::Column::Column (Cell* col)
+	: col {col}
+{}
+
+Cell& SpreadSheet::Column::operator[](size_t pos) {
+    return col[pos];
+}
+const Cell& SpreadSheet::Column::operator[](size_t pos) const {
+    return col[pos];
 }
 
-void  spreadSheet::delete_col(int val)
-{
-	if(val < m_col) {
-		resize(m_row, m_col - val);
-		return;
-	}
-	throw std::out_of_range("value > row");
+bool operator==(const SpreadSheet& lhv, const SpreadSheet& rhv) {
+    if (lhv.m_row != rhv.m_row || lhv.m_col != rhv.m_col) {
+        return false;
+    }
+
+    for (size_t i = 0; i < lhv.m_row; ++i) {
+        for (size_t j = 0; j < lhv.m_col; ++j) {
+            if (lhv.board[i][j] != rhv.board[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
-void spreadSheet::print() 
-{
-	for(int i = 0; i < m_row; ++i) {
-		for(int j = 0; j < m_col; ++j) {
-			std::cout << m_cell[i][j] << " ";
-		}	 
-		std::cout << std::endl;
-	}
+bool operator!=(const SpreadSheet& lhv, const SpreadSheet& rhv) {
+    return !(lhv == rhv);
 }
 
-void spreadSheet::insert(int n, int m, cell ob)
-{
-	if(n >=m_row || m >= m_col || n < 0 || m < 0) {
-		throw std::out_of_range("out of range");
-	}
-	m_cell[n][m] = ob;
+std::ostream& operator<<(std::ostream& out, const SpreadSheet& ob) {
+    for (size_t i = 0; i < ob.m_row; ++i) {
+        for (size_t j = 0; j < ob.m_col; ++j) {
+            out << std::setw(10) << ob.board[i][j] << " ";
+        }
+        out << std::endl;
+    }
+    return out;
 }
 
-void spreadSheet::Allocator()
-{
-	m_cell = new cell*[m_row];
-	for(int i = 0; i < m_row; ++i) {
-		m_cell[i] = new cell[m_col];
-	}
-}
-
-void  spreadSheet::copy_from(int n, int m, const spreadSheet& rhv)
-{
-	this -> resize(n, m);
-	for(int i = 0; i < n; ++i){
-		for(int j = 0; j < m; ++j) {
-			this->m_cell[i][j] = rhv.m_cell[i][j];
-		}
-	}
-}
-
-spreadSheet& spreadSheet::slice(int n, int m)
-{
-	resize(m_row - n, m_col - m);
-	return *this;
-}
 

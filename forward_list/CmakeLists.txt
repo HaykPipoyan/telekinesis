@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.12)
+
+project(forward_list)
+
+set(SOURCES
+    headers/forward_list.h
+    headers/forward_list.hpp
+    src/main.cpp
+)
+
+add_executable(forward_listTest ${SOURCES})
+
+set_property(TARGET forward_listTest PROPERTY CXX_STANDARD 20)

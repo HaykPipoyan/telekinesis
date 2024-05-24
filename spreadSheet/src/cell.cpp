@@ -1,93 +1,200 @@
 #include "../headers/cell.h"
 
-
-cell::cell(const std::string& value)
-	: m_value {value}
-{}
-
-cell::cell(const char* value)
-	: m_value {value}
-{}
-
-cell::cell(const char value)
-	: m_value {value}
-{}
-
-cell::cell(int value)
-	: m_value {std::to_string(value)}
-{}
-
-cell::cell(double value)
-	: m_value {std::to_string(value)}
-{}
-
-cell::cell(const cell& other)
-	: m_value {other.m_value}
-{}
-
-cell::cell(cell&& other)
-{
-	m_value = std::move(other.m_value);
+std::ostream& operator<<(std::ostream& out, const std::vector<int>& ob) {
+	out << "[";
+    for (size_t i = 0; i < ob.size(); ++i) {
+        out << ob[i];
+        if (i != ob.size() - 1) {
+            out << ", ";
+        }
+    }
+    out << "]";
+    return out;
 }
 
-cell& cell::operator=(const cell& other)
+std::istream& operator>>(std::istream& in, std::vector<int>& ob) 
 {
-	if(this != &other) {
-		m_value = other.m_value;
+	int value;
+    while (in >> value) {
+        ob.push_back(value);
+    }
+    return in;
+}
+
+Cell::Cell()
+	: m_val {}
+{}
+
+Cell::Cell(const Cell& rhv)
+	:m_val {rhv.m_val}
+{}
+
+Cell::Cell(Cell&& rhv)
+	: m_val (std::move(rhv.m_val))
+{
+	rhv.m_val = std::string();
+}
+
+Cell::Cell(int val)
+	: m_val(std::to_string(val))
+{}
+
+Cell::Cell(double val)
+	: m_val {std::to_string(val)}
+{}
+
+Cell::Cell(char val)
+	: m_val {std::string(1, val)}
+{}
+
+Cell::Cell(bool val)
+	: m_val {val ? "true" : "false"}
+{}
+
+Cell::Cell(std::string val)
+	: m_val {val}
+{}
+
+Cell::Cell(const std::vector<int>& val)
+{
+	std::ostringstream oss;
+    for (size_t i = 0; i < val.size(); ++i) {
+        oss << val[i];
+        if (i != val.size() - 1) {
+            oss << " ";
+        }
+    }
+    m_val = oss.str();
+}
+const Cell& Cell::operator=(const Cell& rhv)
+{
+	if(this != &rhv) {
+		m_val = rhv.m_val;
 	}
 	return *this;
 }
-cell& cell::operator=(cell&& other)
+   
+const Cell& Cell::operator=(Cell&& rhv)
 {
-	if(this != &other) {
-		m_value = std::move(other.m_value);
+	if(this != &rhv) {
+		m_val = std::move(rhv.m_val);
 	}
 	return *this;
 }
-
-cell& cell::operator=(const std::string& value)
+ 
+const Cell& Cell::operator=(int rhv)
 {
-	m_value = value;
+	m_val = std::to_string(rhv);
 	return *this;
 }
 
-cell& cell::operator=(int value)
+const Cell& Cell::operator=(double rhv)
 {
-	m_value = std::to_string(value);
+	m_val = std::to_string(rhv);
+	return *this;
+} 
+
+const Cell& Cell::operator=(char rhv)
+{
+	m_val = std::string(1, rhv);
+	return *this;
+} 
+
+const Cell& Cell::operator=(bool rhv)
+{
+	m_val = rhv ? "true" : "false";
+	return *this;
+} 
+    
+const Cell& Cell::operator=(std::string rhv)
+{
+	m_val = rhv;
 	return *this;
 }
-
-cell& cell::operator=(double value)
+    
+const Cell& Cell::operator=(const std::vector<int>& rhv)
 {
-	m_value = std::to_string(value);
-	return *this;
+	std::ostringstream oss;
+    for (size_t i = 0; i < rhv.size(); ++i) {
+        oss << rhv[i];
+        if (i != rhv.size() - 1) {
+            oss << " ";
+        }
+    }
+    m_val = oss.str();
+    return *this;
 }
 
-cell::operator int()
+
+
+Cell::operator int() const
 {
-	return std::stoi(m_value);
-}
-
-cell::operator double()
+	return std::stoi(m_val);
+} 
+    
+Cell::operator double() const
 {
-	return std::stod(m_value);
-}
-
-cell::operator std::string() const
+	return std::stod(m_val);
+} 
+    
+Cell::operator char() const
 {
-	return m_value;
+	return m_val.empty() ? ' ' : m_val[0];
+} 
+    
+Cell::operator bool() const
+{
+	return (m_val == "true" || m_val == "1");
+}
+    
+Cell::operator std::string() const
+{
+	return m_val;
+}
+    
+Cell::operator std::vector<int>() const
+{
+	std::vector<int> result;
+    std::istringstream iss(m_val);
+    int num;
+    while (iss >> num) {
+        result.push_back(num);
+    }
+    return result;
+} 
+
+std::string Cell::getValue() const 
+{
+    return m_val;
 }
 
-std::ostream& operator<<(std::ostream& os, const cell& other) {
-	os << other.operator std::string();
-    return os;
+void Cell::setValue(const std::string& value)
+{
+    m_val = value;
 }
 
-std::istream& operator>>(std::istream& is, cell& other) {
-    std::string value;
-    is >> value;
-    other = value;
-    return is;
+bool operator==(const Cell& lhv, const Cell& rhv)
+{
+	return lhv.getValue() == rhv.getValue();
+}
+
+bool operator!=(const Cell& lhv, const Cell& rhv)
+{
+	return !(lhv == rhv);
+}
+
+std::ostream& operator<<(std::ostream& out, const Cell& ob)
+{
+	out << ob.getValue();
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, Cell& ob)
+{
+	std::string value;
+    in >> value;
+    ob.setValue(value);
+    return in;
 }
 
 
