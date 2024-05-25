@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../headers/cell.h"
-#include "../headers/spreadsheet.h"
+#include "../headers/spreadSheet.h"
 
 int main() {
     
